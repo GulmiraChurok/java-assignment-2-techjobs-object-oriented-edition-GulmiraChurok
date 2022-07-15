@@ -6,7 +6,7 @@ public class Job {
 
     private int id;
     private static int nextId = 1;
-
+    private static final String DEFAULT_MESSAGE = "Data not available";
     private String name;
     private Employer employer;
     private Location location;
@@ -30,7 +30,18 @@ public class Job {
     }
     // TODO: Add custom equals and hashCode methods. Consider two Job objects "equal" when their id fields
     //  match.
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Job job = (Job) o;
+        return id == job.id;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
     // TODO: Add getters for each field EXCEPT nextId. Add setters for each field EXCEPT nextID
     //  and id.
 
@@ -78,16 +89,49 @@ public class Job {
         return id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Job job = (Job) o;
-        return id == job.id;
+    public String getValueFromField(JobField field){
+        if(field == null || field.getValue() == "" ) field.setValue(DEFAULT_MESSAGE);
+        return field.getValue();
+    }
+    public String getValueFromField(String name){
+        if(name == null || name == "") name = DEFAULT_MESSAGE;
+        return name;
     }
 
+
     @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public String toString() {
+        String value = "";
+        if((getName() == null || getName()=="") && getEmployer() == null && getLocation() == null && getPositionType() == null && getCoreCompetency() == null){
+            return "\nOOPS! This job does not exist.\n";
+        }
+        value =  String.format("\n" +
+                        "ID: %s\n" +
+                        "Name: %s\n" +
+                        "Employer: %s\n" +
+                        "Location: %s\n" +
+                        "Position Type: %s\n" +
+                        "Core Competency: %s\n",
+                id == 0? DEFAULT_MESSAGE : id,
+                getValueFromField(name),
+                getValueFromField(employer),
+                getValueFromField(location),
+                getValueFromField(positionType),
+                getValueFromField(coreCompetency));
+
+        return value;
+//                "\n" +
+//                "\nid=" + id + "\nname=" + name + "\nemployer=" + employer + "\nlocation=" + location + "\npositionType=" + positionType + "\ncoreCompetency=" + coreCompetency +
+//                "\n";
     }
+
+//    @Override
+//    public String toString() {
+//        return "\nJob{ "\n id=" + id + ",\nname=" + name +
+//            ", \nemployer=" + employer +
+//            ", \nlocation=" + location +
+//            ", \npositionType=" + positionType +
+//            ", \ncoreCompetency=" + coreCompetency
+//                      }\n";
+//    }
 }
